@@ -1,6 +1,5 @@
-import path from 'path';
-import webpack from 'webpack';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
+const path = require('path');
+const webpack = require('webpack');
 
 let config = {
   entry: {
@@ -14,11 +13,15 @@ let config = {
   },
   module: {
     loaders: [
-      {test: /\.js(x)?$/, loaders: ['react-hot', 'babel'], exclude: /node_modules/}
+      {
+        test: /\.jsx?$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/
+      }
     ]
   },
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.js'),
+    new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.js', Infinity),
     new webpack.NoErrorsPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.DefinePlugin({
@@ -27,4 +30,4 @@ let config = {
   ]
 };
 
-export default config;
+module.exports = config;
