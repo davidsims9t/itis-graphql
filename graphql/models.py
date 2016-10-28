@@ -51,3 +51,16 @@ class Kingdom(Base):
     kingdom_id = Column(Integer, primary_key=True)
     kingdom_name = Column(String)
     update_date = Column(String)
+
+class Longnames(Base):
+    __tablename__ = 'longnames'
+    metadata=MetaData(schema='public')
+    tsn = Column(Integer, primary_key=True)
+    completename = Column(String)
+
+class NodcIds(Base):
+    __tablename__ = 'nodc_ids'
+    metadata=MetaData(schema='public')
+    nodc_id = Column(Integer, primary_key=True)
+    update_date = Column(String)
+    tsn = Column(String)

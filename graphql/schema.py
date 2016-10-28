@@ -6,7 +6,9 @@ from models import (
     Expert as ExpertModel,
     Hierarchy as HierarchyModel,
     Comment as CommentModel,
-    Kingdom as KingdomModel
+    Kingdom as KingdomModel,
+    Longnames as LongnameModel,
+    NodcIds as NodcIdsModel
 )
 
 schema = graphene.Schema()
@@ -31,11 +33,23 @@ class Kingdom(SQLAlchemyNode):
     class Meta:
         model = KingdomModel
 
+@schema.register
+class Longname(SQLAlchemyNode):
+    class Meta:
+        model = LongnameModel
+
+@schema.register
+class NodcIds(SQLAlchemyNode):
+    class Meta:
+        model = NodcIdsModel
+
 class Query(graphene.ObjectType):
     node = relay.NodeField()
     all_hierarchy = SQLAlchemyConnectionField(Hierarchy)
     all_comments = SQLAlchemyConnectionField(Comment)
     all_kingdoms = SQLAlchemyConnectionField(Kingdom)
     all_experts = SQLAlchemyConnectionField(Expert)
+    all_longnames = SQLAlchemyConnectionField(Longname)
+    all_nodc_ids = SQLAlchemyConnectionField(NodcIds)
 
 schema.query = Query
