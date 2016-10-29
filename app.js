@@ -1,15 +1,15 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { render } from 'react-dom'
 import { Router, browserHistory, applyRouterMiddleware } from 'react-router'
 import Relay from 'react-relay'
 import useRelay from 'react-router-relay'
 import Routes from './components/Routes'
 
-ReactDOM.render(
+render(
   <Router
     history={browserHistory}
     render={applyRouterMiddleware(useRelay)}
     routes={Routes}
-    environment={Relay.Store} />, 
-  document.getElementById('app')
+    environment={Relay.Store} />,
+  document.getElementById('mount')
 )

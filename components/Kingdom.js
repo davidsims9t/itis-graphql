@@ -4,7 +4,7 @@ export default class Kingdom extends Component {
   render() {
     return (
       <div>
-        
+
       </div>
     )
   }
