@@ -1,6 +1,5 @@
 from sqlalchemy import *
-from sqlalchemy.orm import (scoped_session, sessionmaker, relationship,
-                            backref)
+from sqlalchemy.orm import (scoped_session, sessionmaker, relationship, backref)
 from sqlalchemy.ext.declarative import declarative_base
 
 engine = create_engine('postgres:///ITIS', convert_unicode=True)
@@ -64,3 +63,45 @@ class NodcIds(Base):
     nodc_id = Column(Integer, primary_key=True)
     update_date = Column(String)
     tsn = Column(String)
+
+class OtherSources(Base):
+    __tablename__ = 'other_sources'
+    metadata=MetaData(schema='public')
+    source_id_prefix = Column(String)
+    source_id = Column(Integer, primary_key=True)
+    source_type = Column(String)
+    source = Column(String)
+    version = Column(String)
+    acquisition_date = Column(Date)
+    source_comment = Column(String)
+    update_date = Column(Date)
+
+class Publications(Base):
+    __tablename__ = 'publications'
+    metadata=MetaData(schema='public')
+    pub_id_prefix = Column(String)
+    publication_id = Column(Integer, primary_key=True)
+    reference_author = Column(String)
+    title = Column(String)
+    publication_name = Column(String)
+    listed_pub_date = Column(Date)
+    actual_pub_date = Column(Date)
+    publisher = Column(String)
+    pub_place = Column(String)
+    isbn = Column(String)
+    issn = Column(String)
+    pages = Column(String)
+    pub_comment = Column(String)
+    update_date = Column(Date)
+
+class ReferenceLinks(Base):
+    __tablename__ = 'reference_links'
+    metadata=MetaData(schema='public')
+    tsn = Column(String, primary_key=True)
+    doc_id_prefix = Column(String)
+    documentation_id = Column(Integer)
+    original_desc_ind = Column(String)
+    init_itis_desc_ind = Column(String)
+    change_track_id = Column(Integer)
+    vernacular_name = Column(String)
+    update_date = Column(Date)

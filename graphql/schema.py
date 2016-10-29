@@ -8,7 +8,10 @@ from models import (
     Comment as CommentModel,
     Kingdom as KingdomModel,
     Longnames as LongnameModel,
-    NodcIds as NodcIdsModel
+    NodcIds as NodcIdsModel,
+    OtherSources as OtherSourcesModel,
+    Publications as PublicationsModel,
+    ReferenceLinks as ReferenceLinksModel
 )
 
 schema = graphene.Schema()
@@ -43,6 +46,21 @@ class NodcIds(SQLAlchemyNode):
     class Meta:
         model = NodcIdsModel
 
+@schema.register
+class OtherSources(SQLAlchemyNode):
+    class Meta:
+        model = OtherSourcesModel
+
+@schema.register
+class Publications(SQLAlchemyNode):
+    class Meta:
+        model = PublicationsModel
+
+@schema.register
+class ReferenceLinks(SQLAlchemyNode):
+    class Meta:
+        model = ReferenceLinksModel
+
 class Query(graphene.ObjectType):
     node = relay.NodeField()
     all_hierarchy = SQLAlchemyConnectionField(Hierarchy)
@@ -51,5 +69,8 @@ class Query(graphene.ObjectType):
     all_experts = SQLAlchemyConnectionField(Expert)
     all_longnames = SQLAlchemyConnectionField(Longname)
     all_nodc_ids = SQLAlchemyConnectionField(NodcIds)
+    all_other_sources = SQLAlchemyConnectionField(OtherSources)
+    all_publications = SQLAlchemyConnectionField(Publications)
+    all_reference_links = SQLAlchemyConnectionField(ReferenceLinks)
 
 schema.query = Query
