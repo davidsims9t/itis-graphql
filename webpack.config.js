@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
 const config = {
-  devtool: 'cheap-module-eval-source-map',
+  devtool: 'eval',
   entry: path.join(__dirname, 'app.js'),
   output: {
     path: path.join(__dirname, 'dist'),

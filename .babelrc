@@ -4,6 +4,11 @@
     "transform-es2015-modules-commonjs"
   ],
   "presets": [
+    {
+      "plugins": [
+        "./build/babelRelayPlugin"
+      ]
+    },
     "react",
     "es2015",
     "stage-0",

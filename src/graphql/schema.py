@@ -1,4 +1,5 @@
 import graphene
+import json
 from graphene import relay
 from graphene.contrib.sqlalchemy import SQLAlchemyNode, SQLAlchemyConnectionField
 from models import (
@@ -130,3 +131,8 @@ class Query(graphene.ObjectType):
     all_vernaculars = SQLAlchemyConnectionField(Vernaculars)
 
 schema.query = Query
+
+introspection_dict = schema.introspect()
+
+with open('data/schema.json', 'w') as fp:
+    json.dump(introspection_dict, fp, ensure_ascii=False)
