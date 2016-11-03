@@ -11,7 +11,15 @@ from models import (
     NodcIds as NodcIdsModel,
     OtherSources as OtherSourcesModel,
     Publications as PublicationsModel,
-    ReferenceLinks as ReferenceLinksModel
+    ReferenceLinks as ReferenceLinksModel,
+    StrippedAuthor as StrippedAuthorModel,
+    SynonymLinks as SynonymLinksModel,
+    TaxonAuthorsLkp as TaxonAuthorsLkpModel,
+    TaxonUnitTypes as TaxonUnitTypesModel,
+    TaxonomicUnits as TaxonomicUnitsModel,
+    TuCommentsLinks as TuCommentsLinksModel,
+    VernRefLinks as VernRefLinksModel,
+    Vernaculars as VernacularsModel
 )
 
 schema = graphene.Schema()
@@ -60,6 +68,46 @@ class Publications(SQLAlchemyNode):
 class ReferenceLinks(SQLAlchemyNode):
     class Meta:
         model = ReferenceLinksModel
+
+@schema.register
+class StrippedAuthor(SQLAlchemyNode):
+    class Meta:
+        model = StrippedAuthorModel
+
+@schema.register
+class SynonymLinks(SQLAlchemyNode):
+    class Meta:
+        model = SynonymLinksModel
+
+@schema.register
+class TaxonAuthorsLkp(SQLAlchemyNode):
+    class Meta:
+        model = TaxonAuthorsLkpModel
+
+@schema.register
+class TaxonUnitTypes(SQLAlchemyNode):
+    class Meta:
+        model = TaxonUnitTypesModel
+
+@schema.register
+class TaxonomicUnits(SQLAlchemyNode):
+    class Meta:
+        model = TaxonomicUnitsModel
+
+@schema.register
+class TuCommentsLinks(SQLAlchemyNode):
+    class Meta:
+        model = TuCommentsLinksModel
+
+@schema.register
+class VernRefLinks(SQLAlchemyNode):
+    class Meta:
+        model = VernRefLinksModel
+
+@schema.register
+class Vernaculars(SQLAlchemyNode):
+    class Meta:
+        model = VernacularsModel
 
 class Query(graphene.ObjectType):
     node = relay.NodeField()

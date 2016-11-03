@@ -2,7 +2,25 @@ from flask import Flask
 from flask_graphql import GraphQLView
 
 from models import db_session
-from schema import schema, Hierarchy, Comment, Expert, Longname, NodcIds
+from schema import (
+    schema,
+    Hierarchy,
+    Comment,
+    Expert,
+    Longname,
+    NodcIds,
+    OtherSources,
+    Publications,
+    ReferenceLinks,
+    StrippedAuthor,
+    SynonymLinks,
+    TaxonAuthorsLkp,
+    TaxonUnitTypes,
+    TaxonomicUnits,
+    TuCommentsLinks,
+    VernRefLinks,
+    Vernaculars
+)
 
 app = Flask(__name__)
 app.debug = True
