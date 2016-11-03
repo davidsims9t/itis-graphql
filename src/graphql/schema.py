@@ -120,5 +120,13 @@ class Query(graphene.ObjectType):
     all_other_sources = SQLAlchemyConnectionField(OtherSources)
     all_publications = SQLAlchemyConnectionField(Publications)
     all_reference_links = SQLAlchemyConnectionField(ReferenceLinks)
+    all_stripped_author = SQLAlchemyConnectionField(StrippedAuthor)
+    all_synonym_links = SQLAlchemyConnectionField(SynonymLinks)
+    all_taxon_authors_lkp = SQLAlchemyConnectionField(TaxonAuthorsLkp)
+    all_taxon_unit_types = SQLAlchemyConnectionField(TaxonUnitTypes)
+    all_taxonomic_units = SQLAlchemyConnectionField(TaxonomicUnits)
+    all_tu_comments_links = SQLAlchemyConnectionField(TuCommentsLinks)
+    all_vern_ref_links = SQLAlchemyConnectionField(VernRefLinks)
+    all_vernaculars = SQLAlchemyConnectionField(Vernaculars)
 
 schema.query = Query
