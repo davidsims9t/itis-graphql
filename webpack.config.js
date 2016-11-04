@@ -17,8 +17,8 @@ const config = {
         use: {
           loader: 'babel',
           options: {
-            presets: ["es2015", "stage-0", 'react'],
-            plugins: ['transform-runtime']
+            presets: ["es2015", "stage-0", "react"],
+            plugins: ['transform-runtime', path.join(__dirname, '/build/babelRelayPlugin')]
           }
         },
         exclude: /node_modules/

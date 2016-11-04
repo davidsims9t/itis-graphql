@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { Route } from 'react-relay'
 
-export default class extends Route {
+export default class Home extends Component {
   render() {
     return (
       <div>

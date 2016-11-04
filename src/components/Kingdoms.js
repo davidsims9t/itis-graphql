@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 
-export default class extends Component {
+export default class Kingdoms extends Component {
   render() {
     return (
       <div>
         <h1>Kingdoms</h1>
         <ul>
-          {this.props.viewer.kingdoms.edges.map(edge => {
-            <li key={edge.node.kingdomId}>{edge.node.kingdomId}</li>
+          {this.props.kingdoms.edges.map(edge => {
+            return <li key={edge.node.kingdomId}>{edge.node.kingdomName}</li>
           })}
         </ul>
       </div>

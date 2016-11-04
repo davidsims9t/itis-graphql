@@ -47,6 +47,7 @@ class Hierarchy(Base):
 class Kingdom(Base):
     __tablename__ = 'kingdoms'
     metadata = MetaData(schema='public')
+    id = Column(Integer, nullable=True)
     kingdom_id = Column(Integer, primary_key=True, nullable=False)
     kingdom_name = Column(String(10), nullable=False)
     update_date = Column(Date, nullable=False)
