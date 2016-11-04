@@ -13,11 +13,13 @@ const config = {
     rules: [
       {
         test: /\.js$/,
-        loader: 'babel',
         include: __dirname,
-        options: {
-          presets: ["es2015", "stage-0", 'react'],
-          plugins: ['transform-runtime']
+        use: {
+          loader: 'babel',
+          options: {
+            presets: ["es2015", "stage-0", 'react'],
+            plugins: ['transform-runtime']
+          }
         },
         exclude: /node_modules/
       }
@@ -26,12 +28,12 @@ const config = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.DefinePlugin({
-      "process.env.NODE_ENV": '"development"',
       __DEV__: true
     }),
     new HtmlWebpackPlugin({
       title: 'ITIS',
-      cache: true
+      cache: false,
+      template: path.join(__dirname, 'src/template.ejs')
     })
   ]
 };

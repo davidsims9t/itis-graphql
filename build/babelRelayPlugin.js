@@ -1,4 +1,7 @@
-var getbabelRelayPlugin = require('babel-relay-plugin');
-var schema = require('../data/schema.json');
+var fs = require('fs');
+var path = require('path');
+var schema = path.join(__dirname, '../data/schema.json');
 
-module.exports = getbabelRelayPlugin(schema.data);
+fs.access(schema, fs.F_OK, function (err) {
+  if (!err) module.exports = require('babel-relay-plugin')(require(schema));
+});

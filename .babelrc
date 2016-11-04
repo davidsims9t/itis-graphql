@@ -1,17 +1,12 @@
 {
   "passPerPreset": true,
   "plugins": [
-    "transform-es2015-modules-commonjs"
+    "./build/babelRelayPlugin",
+    "transform-runtime"
   ],
   "presets": [
-    {
-      "plugins": [
-        "./build/babelRelayPlugin"
-      ]
-    },
     "react",
     "es2015",
-    "stage-0",
-    "react-relay"
+    "stage-0"
   ]
 }
