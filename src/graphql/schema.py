@@ -111,8 +111,12 @@ class Vernaculars(SQLAlchemyNode):
         model = VernacularsModel
 
 class Query(graphene.ObjectType):
-    node = relay.NodeField()
-    all_hierarchy = SQLAlchemyConnectionField(Hierarchy)
+    all_hierarchy = SQLAlchemyConnectionField(Hierarchy, level=graphene.Int())
+
+    def resolve_all_hierarchy(self, args, info):
+        level = args.get('level')
+        return HierarchyModel.query.filter(HierarchyModel.level.in_([level])).all()
+
     all_comments = SQLAlchemyConnectionField(Comment)
     all_kingdoms = SQLAlchemyConnectionField(Kingdom)
     all_experts = SQLAlchemyConnectionField(Expert)
