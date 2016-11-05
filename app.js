@@ -5,6 +5,9 @@ import Relay from 'react-relay'
 import useRelay from 'react-router-relay'
 import Routes from './src/routes'
 
+import 'react-mdl/extra/material.js'
+import 'react-mdl/extra/material.min.css'
+
 ReactDOM.render(
   <Router
     render={applyRouterMiddleware(useRelay.default)}
