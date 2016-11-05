@@ -5,7 +5,7 @@ export default class Hierarchy extends Component {
   render() {
     return (
       <Card>
-        <CardTitle>Hierarchy List for Kingdom Animalia</CardTitle>
+        <CardTitle>List for Kingdom Animalia</CardTitle>
 
         <CardText>
         </CardText>

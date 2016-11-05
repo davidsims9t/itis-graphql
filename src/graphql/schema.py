@@ -1,7 +1,7 @@
 import graphene
 import json
 from graphene import relay
-from graphene.contrib.sqlalchemy import SQLAlchemyNode, SQLAlchemyConnectionField
+from graphene.contrib.sqlalchemy import SQLAlchemyNode, SQLAlchemyObjectType, SQLAlchemyConnectionField
 from models import (
     db_session,
     Expert as ExpertModel,
@@ -110,7 +110,7 @@ class Vernaculars(SQLAlchemyNode):
     class Meta:
         model = VernacularsModel
 
-class Query(graphene.ObjectType):
+class Viewer(graphene.ObjectType):
     all_hierarchy = SQLAlchemyConnectionField(Hierarchy, level=graphene.Int())
 
     def resolve_all_hierarchy(self, args, info):
@@ -133,6 +133,13 @@ class Query(graphene.ObjectType):
     all_tu_comments_links = SQLAlchemyConnectionField(TuCommentsLinks)
     all_vern_ref_links = SQLAlchemyConnectionField(VernRefLinks)
     all_vernaculars = SQLAlchemyConnectionField(Vernaculars)
+
+class Query(graphene.ObjectType):
+    node = relay.NodeField()
+    viewer = graphene.Field(Viewer)
+
+    def resolve_viewer(self, *args, **kwargs):
+        return self
 
 schema.query = Query
 
