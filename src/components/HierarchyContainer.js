@@ -1,14 +1,13 @@
 import Relay from 'react-relay'
-import Kingdoms from './Kingdoms'
+import Hierarchy from './Hierarchy'
 
-export default Relay.createContainer(Kingdoms, {
+export default Relay.createContainer(Hierarchy, {
   fragments: {
-    kingdoms: () => Relay.QL`
-      fragment kingdoms on KingdomDefaultConnection {
+    hierarchy: () => Relay.QL`
+      fragment hierarchy on HierarchyDefaultConnection {
         edges {
           node {
-            kingdomId
-            kingdomName
+            hierarchyString
           }
         }
       }`

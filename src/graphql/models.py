@@ -38,6 +38,7 @@ class Expert(Base):
 class Hierarchy(Base):
     __tablename__ = 'hierarchy'
     metadata = MetaData(schema='public')
+    id = Column(String(300), nullable=True)
     hierarchy_string = Column(String(300), primary_key=True, nullable=False)
     tsn = Column(Integer, nullable=False)
     parent_tsn = Column(Integer, nullable=True)
