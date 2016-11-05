@@ -3,12 +3,14 @@ import Kingdoms from './Kingdoms'
 
 export default Relay.createContainer(Kingdoms, {
   fragments: {
-    kingdoms: () => Relay.QL`
-      fragment kingdoms on KingdomDefaultConnection {
-        edges {
-          node {
-            kingdomId
-            kingdomName
+    viewer: () => Relay.QL`
+      fragment on Viewer {
+        kingdoms: allKingdoms(first:10) {
+          edges {
+            node {
+              kingdomId
+              kingdomName
+            }
           }
         }
       }`

@@ -3,11 +3,13 @@ import Hierarchy from './Hierarchy'
 
 export default Relay.createContainer(Hierarchy, {
   fragments: {
-    hierarchy: () => Relay.QL`
-      fragment hierarchy on HierarchyDefaultConnection {
-        edges {
-          node {
-            hierarchyString
+    viewer: () => Relay.QL`
+      fragment on Viewer {
+        hierarchy: allHierarchy(first:10, level: 10) {
+          edges {
+            node {
+              hierarchyString
+            }
           }
         }
       }`

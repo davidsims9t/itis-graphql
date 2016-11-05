@@ -6,7 +6,7 @@ export default class Kingdoms extends Component {
     super(props)
 
     this.state = {
-      kingdom: null
+      kingdom: 1
     }
   }
 
@@ -17,13 +17,14 @@ export default class Kingdoms extends Component {
   }
 
   render() {
+    console.log(this.props.viewer)
     return (
       <Card>
         <CardTitle>Select a Kingdom</CardTitle>
 
         <CardText>
           <RadioGroup name="kingdoms" value={this.state.kingdom} onChange={this.onChange}>
-            {this.props.kingdoms.edges.map(edge => {
+            {this.props.viewer.kingdoms.edges.map(edge => {
               return (
                 <Radio
                   ripple
