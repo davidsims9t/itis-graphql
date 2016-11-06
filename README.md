@@ -24,7 +24,7 @@ pip install
 npm install
 
 # Start GraphQL server
-python graphql/app.py
+python src/graphql/app.py
 
 # Start WebPack
 npm start
