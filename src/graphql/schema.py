@@ -36,19 +36,38 @@ class Expert(SQLAlchemyNode):
         model = ExpertModel
 
 @schema.register
+class Longname(SQLAlchemyNode):
+    class Meta:
+        model = LongnameModel
+
+@schema.register
+class HierarchyChild(SQLAlchemyNode):
+    class Meta:
+        model = HierarchyModel
+
+    longname = SQLAlchemyConnectionField(Longname)
+
+    def resolve_longname(self, args, info):
+        return LongnameModel.query.filter(LongnameModel.tsn.in_([self.tsn])).all()
+
+@schema.register
 class Hierarchy(SQLAlchemyNode):
     class Meta:
         model = HierarchyModel
+
+    children = SQLAlchemyConnectionField(HierarchyChild)
+    longname = SQLAlchemyConnectionField(Longname)
+
+    def resolve_longname(self, args, info):
+        return LongnameModel.query.filter(LongnameModel.tsn.in_([self.tsn])).all()
+
+    def resolve_children(self, args, info):
+        return HierarchyModel.query.filter(HierarchyModel.parent_tsn.in_([self.tsn])).all()
 
 @schema.register
 class Kingdom(SQLAlchemyNode):
     class Meta:
         model = KingdomModel
-
-@schema.register
-class Longname(SQLAlchemyNode):
-    class Meta:
-        model = LongnameModel
 
 @schema.register
 class NodcIds(SQLAlchemyNode):
