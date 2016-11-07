@@ -57,6 +57,7 @@ class Kingdom(Base):
 class Longnames(Base):
     __tablename__ = 'longnames'
     metadata = MetaData(schema='public')
+    id = Column(Integer, nullable=True)
     tsn = Column(Integer, primary_key=True, nullable=False)
     completename = Column(String(300), nullable=False)
 

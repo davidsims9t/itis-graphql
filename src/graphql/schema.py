@@ -41,30 +41,6 @@ class Longname(SQLAlchemyNode):
         model = LongnameModel
 
 @schema.register
-class HierarchyChild(SQLAlchemyNode):
-    class Meta:
-        model = HierarchyModel
-
-    longname = SQLAlchemyConnectionField(Longname)
-
-    def resolve_longname(self, args, info):
-        return LongnameModel.query.filter(LongnameModel.tsn.in_([self.tsn])).all()
-
-@schema.register
-class Hierarchy(SQLAlchemyNode):
-    class Meta:
-        model = HierarchyModel
-
-    children = SQLAlchemyConnectionField(HierarchyChild)
-    longname = SQLAlchemyConnectionField(Longname)
-
-    def resolve_longname(self, args, info):
-        return LongnameModel.query.filter(LongnameModel.tsn.in_([self.tsn])).all()
-
-    def resolve_children(self, args, info):
-        return HierarchyModel.query.filter(HierarchyModel.parent_tsn.in_([self.tsn])).all()
-
-@schema.register
 class Kingdom(SQLAlchemyNode):
     class Meta:
         model = KingdomModel
@@ -114,6 +90,11 @@ class TaxonomicUnits(SQLAlchemyNode):
     class Meta:
         model = TaxonomicUnitsModel
 
+    taxon_unit_type = SQLAlchemyConnectionField(TaxonUnitTypes)
+
+    def resolve_taxon_unit_type(self, args, info):
+        return TaxonUnitTypesModel.query.filter(TaxonUnitTypesModel.rank_id.in_([self.rank_id]), TaxonUnitTypesModel.kingdom_id.in_([self.kingdom_id])).all()
+
 @schema.register
 class TuCommentsLinks(SQLAlchemyNode):
     class Meta:
@@ -129,12 +110,35 @@ class Vernaculars(SQLAlchemyNode):
     class Meta:
         model = VernacularsModel
 
+class HierarchyBase(SQLAlchemyNode):
+    class Meta:
+        model = HierarchyModel
+
+    taxonomic_unit = SQLAlchemyConnectionField(Longname)
+
+    def resolve_longname(self, args, info):
+        return TaxonomicUnitsModel.query.filter(TaxonomicUnitsModel.tsn.in_([self.tsn])).all()
+
+@schema.register
+class Hierarchy(SQLAlchemyNode):
+    class Meta:
+        model = HierarchyModel
+
+    taxonomic_unit = SQLAlchemyConnectionField(TaxonomicUnits)
+    children = SQLAlchemyConnectionField(HierarchyBase)
+
+    def resolve_children(self, args, info):
+        return HierarchyModel.query.filter(HierarchyModel.parent_tsn.in_([self.tsn])).all()
+
+    def resolve_taxonomic_unit(self, args, info):
+        return TaxonomicUnitsModel.query.filter(TaxonomicUnitsModel.tsn.in_([self.tsn])).all()
+
 class Viewer(graphene.ObjectType):
-    all_hierarchy = SQLAlchemyConnectionField(Hierarchy, level=graphene.Int())
+    all_hierarchy = SQLAlchemyConnectionField(Hierarchy, tsn=graphene.Int())
 
     def resolve_all_hierarchy(self, args, info):
-        level = args.get('level')
-        return HierarchyModel.query.filter(HierarchyModel.level.in_([level])).all()
+        tsn = args.get('tsn')
+        return HierarchyModel.query.filter(HierarchyModel.tsn.in_([tsn])).all()
 
     all_comments = SQLAlchemyConnectionField(Comment)
     all_kingdoms = SQLAlchemyConnectionField(Kingdom)

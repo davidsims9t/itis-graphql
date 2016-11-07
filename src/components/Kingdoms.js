@@ -17,7 +17,6 @@ export default class Kingdoms extends Component {
   }
 
   render() {
-    console.log(this.props.viewer)
     return (
       <Card>
         <CardTitle>Select a Kingdom</CardTitle>

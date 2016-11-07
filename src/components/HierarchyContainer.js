@@ -5,10 +5,30 @@ export default Relay.createContainer(Hierarchy, {
   fragments: {
     viewer: () => Relay.QL`
       fragment on Viewer {
-        hierarchy: allHierarchy(first:10, level: 10) {
+        hierarchies: allHierarchy(first:10, tsn:202423) {
           edges {
             node {
-              hierarchyString
+              tsn
+              longname(first:1) {
+                edges {
+                  node {
+                    completename
+                  }
+                }
+              }
+              children(first:10) {
+                edges {
+                  node {
+                    longname(first:1) {
+                      edges {
+                        node {
+                          completename
+                        }
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }
