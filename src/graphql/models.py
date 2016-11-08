@@ -137,6 +137,7 @@ class TaxonUnitTypes(Base):
     metadata = MetaData(schema='public')
     kingdom_id = Column(Integer, primary_key=True, nullable=False)
     rank_id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(String(50), nullable=True)
     rank_name = Column(String(15), nullable=False)
     dir_parent_rank_id = Column(Integer, nullable=False)
     req_parent_rank_id = Column(Integer, nullable=False)
@@ -146,6 +147,7 @@ class TaxonomicUnits(Base):
     __tablename__ = 'taxonomic_units'
     metadata = MetaData(schema='public')
     tsn = Column(Integer, primary_key=True, nullable=False)
+    id = Column(String(100), nullable=True)
     unit_ind1 = Column(String(1), nullable=True)
     unit_name1 = Column(String(35), nullable=False)
     unit_ind2 = Column(String(1), nullable=True)

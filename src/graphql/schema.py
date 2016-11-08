@@ -1,7 +1,7 @@
 import graphene
 import json
 from graphene import relay
-from graphene.contrib.sqlalchemy import SQLAlchemyNode, SQLAlchemyObjectType, SQLAlchemyConnectionField
+from graphene.contrib.sqlalchemy import SQLAlchemyNode, SQLAlchemyConnectionField
 from models import (
     db_session,
     Expert as ExpertModel,
@@ -110,13 +110,17 @@ class Vernaculars(SQLAlchemyNode):
     class Meta:
         model = VernacularsModel
 
+@schema.register
 class HierarchyBase(SQLAlchemyNode):
     class Meta:
         model = HierarchyModel
 
-    taxonomic_unit = SQLAlchemyConnectionField(Longname)
+    taxonomic_unit = SQLAlchemyConnectionField(TaxonomicUnits)
 
-    def resolve_longname(self, args, info):
+    def resolve_children(self, args, info):
+        return HierarchyModel.query.filter(HierarchyModel.parent_tsn.in_([self.tsn])).all()
+
+    def resolve_taxonomic_unit(self, args, info):
         return TaxonomicUnitsModel.query.filter(TaxonomicUnitsModel.tsn.in_([self.tsn])).all()
 
 @schema.register
@@ -127,18 +131,18 @@ class Hierarchy(SQLAlchemyNode):
     taxonomic_unit = SQLAlchemyConnectionField(TaxonomicUnits)
     children = SQLAlchemyConnectionField(HierarchyBase)
 
-    def resolve_children(self, args, info):
-        return HierarchyModel.query.filter(HierarchyModel.parent_tsn.in_([self.tsn])).all()
-
     def resolve_taxonomic_unit(self, args, info):
         return TaxonomicUnitsModel.query.filter(TaxonomicUnitsModel.tsn.in_([self.tsn])).all()
+
+    def resolve_children(self, args, info):
+        return HierarchyModel.query.filter(HierarchyModel.parent_tsn.in_([self.tsn])).all()
 
 class Viewer(graphene.ObjectType):
     all_hierarchy = SQLAlchemyConnectionField(Hierarchy, tsn=graphene.Int())
 
     def resolve_all_hierarchy(self, args, info):
         tsn = args.get('tsn')
-        return HierarchyModel.query.filter(HierarchyModel.tsn.in_([tsn])).all()
+        return HierarchyModel.query.filter(HierarchyModel.tsn == tsn).all()
 
     all_comments = SQLAlchemyConnectionField(Comment)
     all_kingdoms = SQLAlchemyConnectionField(Kingdom)

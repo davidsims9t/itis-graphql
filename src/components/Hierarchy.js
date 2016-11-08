@@ -12,10 +12,10 @@ export default class Hierarchy extends Component {
             {this.props.viewer.hierarchies.edges.map(edge => {
               return (
                 <ListItem key={edge.node.id}>
-                  {edge.node.longname.edges[0].node.completename}
+                  {edge.node.taxonomicUnit.edges[0].node.completeName}
                   <List>
                     {edge.node.children.edges.map(edge => {
-                      return <ListItem>{edge.node.longname.edges[0].node.completename}</ListItem>
+                      return <ListItem>{edge.node.taxonomicUnit.edges[0].node.completeName}</ListItem>
                     })}
                   </List>
                 </ListItem>

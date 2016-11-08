@@ -9,20 +9,36 @@ export default Relay.createContainer(Hierarchy, {
           edges {
             node {
               tsn
-              longname(first:1) {
+              taxonomicUnit(first:1) {
                 edges {
                   node {
-                    completename
+                    completeName
+                    credibilityRtng
+                    taxonUnitType(first:1) {
+                      edges {
+                        node {
+                          rankName
+                        }
+                      }
+                    }
                   }
                 }
               }
               children(first:10) {
                 edges {
                   node {
-                    longname(first:1) {
+                    taxonomicUnit(first:1) {
                       edges {
                         node {
-                          completename
+                          completeName
+                          credibilityRtng
+                          taxonUnitType(first:1) {
+                            edges {
+                              node {
+                                rankName
+                              }
+                            }
+                          }
                         }
                       }
                     }
