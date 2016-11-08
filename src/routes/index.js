@@ -8,7 +8,12 @@ import HierarchyContainer from '../components/HierarchyContainer'
 
 export default (
   <Route path='/' component={Wrapper}>
-    <IndexRoute component={KingdomsContainer} queries={ViewerQuery} />
-    <Route path=':hierarchy' component={HierarchyContainer} queries={ViewerQuery} />
+    <IndexRoute
+      component={KingdomsContainer}
+      queries={ViewerQuery} />
+    <Route
+      path='/hierarchy/:tsn'
+      component={HierarchyContainer}
+      queries={ViewerQuery} />
   </Route>
 )

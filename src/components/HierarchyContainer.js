@@ -2,10 +2,14 @@ import Relay from 'react-relay'
 import Hierarchy from './Hierarchy'
 
 export default Relay.createContainer(Hierarchy, {
+  initialVariables: {
+    tsn: null
+  },
+
   fragments: {
-    viewer: () => Relay.QL`
+    viewer: ($tsn) => Relay.QL`
       fragment on Viewer {
-        hierarchies: allHierarchy(first:10, tsn:202423) {
+        hierarchies: allHierarchy(first:100, tsn:$tsn) {
           edges {
             node {
               tsn
@@ -24,9 +28,10 @@ export default Relay.createContainer(Hierarchy, {
                   }
                 }
               }
-              children(first:10) {
+              children(first:100) {
                 edges {
                   node {
+                    tsn
                     taxonomicUnit(first:1) {
                       edges {
                         node {
