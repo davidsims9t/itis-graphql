@@ -2,26 +2,8 @@ from flask import Flask
 from flask_graphql import GraphQLView
 import os
 
-from models import db_session
-from schema import (
-    schema,
-    Hierarchy,
-    Comment,
-    Expert,
-    Longname,
-    NodcIds,
-    OtherSources,
-    Publications,
-    ReferenceLinks,
-    StrippedAuthor,
-    SynonymLinks,
-    TaxonAuthorsLkp,
-    TaxonUnitTypes,
-    TaxonomicUnits,
-    TuCommentsLinks,
-    VernRefLinks,
-    Vernaculars
-)
+from database import db_session, init_db
+import schema
 
 app = Flask(__name__)
 app.debug = True
@@ -40,4 +22,5 @@ def shutdown_session(exception=None):
     db_session.remove()
 
 if __name__ == '__main__':
+    init_db()
     app.run(host='127.0.0.1',port=int(os.environ.get('PORT')))

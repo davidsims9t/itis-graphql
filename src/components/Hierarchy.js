@@ -6,6 +6,25 @@ export default class Hierarchy extends Component {
     this.props.relay.setVariables({tsn: parseInt(this.props.params.tsn)})
   }
 
+  getSpecies = edge => {
+    return (
+      <List>
+        {edge.node.children.edges.map(edge => {
+          return (
+            <ListItem style={{display: 'block'}}>
+              <span>
+                {edge.node.taxonomicUnit.edges[0].node.taxonUnitType.edges[0].node.rankName.trim()}: {edge.node.taxonomicUnit.edges[0].node.completeName}
+              </span>
+              <span>
+                - TSN: {edge.node.tsn}
+              </span>
+            </ListItem>
+          )
+        })}
+      </List>
+    )
+  }
+
   render() {
     if (!this.props.viewer.hierarchies) {
       return <div>Loading...</div>
@@ -34,6 +53,8 @@ export default class Hierarchy extends Component {
                           <span>
                             - TSN: {edge.node.tsn}
                           </span>
+
+                          {this.getSpecies(edge)}
                         </ListItem>
                       )
                     })}

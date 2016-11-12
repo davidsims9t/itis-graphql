@@ -1,9 +1,9 @@
 import graphene
 import json
 from graphene import relay
-from graphene.contrib.sqlalchemy import SQLAlchemyNode, SQLAlchemyConnectionField
+from graphene.relay import ConnectionField
+from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
 from models import (
-    db_session,
     Expert as ExpertModel,
     Hierarchy as HierarchyModel,
     Comment as CommentModel,
@@ -23,128 +23,116 @@ from models import (
     Vernaculars as VernacularsModel
 )
 
-schema = graphene.Schema()
-
-@schema.register
-class Comment(SQLAlchemyNode):
+class Comment(SQLAlchemyObjectType):
     class Meta:
         model = CommentModel
+        interfaces = (relay.Node, )
 
-@schema.register
-class Expert(SQLAlchemyNode):
+class Expert(SQLAlchemyObjectType):
     class Meta:
         model = ExpertModel
+        interfaces = (relay.Node, )
 
-@schema.register
-class Longname(SQLAlchemyNode):
+class Longname(SQLAlchemyObjectType):
     class Meta:
         model = LongnameModel
+        interfaces = (relay.Node, )
 
-@schema.register
-class Kingdom(SQLAlchemyNode):
+class Kingdom(SQLAlchemyObjectType):
     class Meta:
         model = KingdomModel
+        interfaces = (relay.Node, )
 
-@schema.register
-class NodcIds(SQLAlchemyNode):
+class NodcIds(SQLAlchemyObjectType):
     class Meta:
         model = NodcIdsModel
+        interfaces = (relay.Node, )
 
-@schema.register
-class OtherSources(SQLAlchemyNode):
+class OtherSources(SQLAlchemyObjectType):
     class Meta:
         model = OtherSourcesModel
+        interfaces = (relay.Node, )
 
-@schema.register
-class Publications(SQLAlchemyNode):
+class Publications(SQLAlchemyObjectType):
     class Meta:
         model = PublicationsModel
+        interfaces = (relay.Node, )
 
-@schema.register
-class ReferenceLinks(SQLAlchemyNode):
+class ReferenceLinks(SQLAlchemyObjectType):
     class Meta:
         model = ReferenceLinksModel
+        interfaces = (relay.Node, )
 
-@schema.register
-class StrippedAuthor(SQLAlchemyNode):
+class StrippedAuthor(SQLAlchemyObjectType):
     class Meta:
         model = StrippedAuthorModel
+        interfaces = (relay.Node, )
 
-@schema.register
-class SynonymLinks(SQLAlchemyNode):
+class SynonymLinks(SQLAlchemyObjectType):
     class Meta:
         model = SynonymLinksModel
+        interfaces = (relay.Node, )
 
-@schema.register
-class TaxonAuthorsLkp(SQLAlchemyNode):
+class TaxonAuthorsLkp(SQLAlchemyObjectType):
     class Meta:
         model = TaxonAuthorsLkpModel
+        interfaces = (relay.Node, )
 
-@schema.register
-class TaxonUnitTypes(SQLAlchemyNode):
+class TaxonUnitTypes(SQLAlchemyObjectType):
     class Meta:
         model = TaxonUnitTypesModel
+        interfaces = (relay.Node, )
 
-@schema.register
-class TaxonomicUnits(SQLAlchemyNode):
+class TaxonomicUnits(SQLAlchemyObjectType):
     class Meta:
         model = TaxonomicUnitsModel
+        interfaces = (relay.Node, )
 
     taxon_unit_type = SQLAlchemyConnectionField(TaxonUnitTypes)
 
     def resolve_taxon_unit_type(self, args, info):
         return TaxonUnitTypesModel.query.filter(TaxonUnitTypesModel.rank_id.in_([self.rank_id]), TaxonUnitTypesModel.kingdom_id.in_([self.kingdom_id])).all()
 
-@schema.register
-class TuCommentsLinks(SQLAlchemyNode):
+class TuCommentsLinks(SQLAlchemyObjectType):
     class Meta:
         model = TuCommentsLinksModel
+        interfaces = (relay.Node, )
 
-@schema.register
-class VernRefLinks(SQLAlchemyNode):
+class VernRefLinks(SQLAlchemyObjectType):
     class Meta:
         model = VernRefLinksModel
+        interfaces = (relay.Node, )
 
-@schema.register
-class Vernaculars(SQLAlchemyNode):
+class Vernaculars(SQLAlchemyObjectType):
     class Meta:
         model = VernacularsModel
+        interfaces = (relay.Node, )
 
-@schema.register
-class HierarchyBase(SQLAlchemyNode):
+class Hierarchy(SQLAlchemyObjectType):
     class Meta:
         model = HierarchyModel
+        interfaces = (relay.Node, )
 
     taxonomic_unit = SQLAlchemyConnectionField(TaxonomicUnits)
+    children = SQLAlchemyConnectionField(lambda: Hierarchy)
 
-    def resolve_children(self, args, info):
-        return HierarchyModel.query.filter(HierarchyModel.parent_tsn.in_([self.tsn])).all()
-
-    def resolve_taxonomic_unit(self, args, info):
+    def resolve_taxonomic_unit(self, args, context, info):
         return TaxonomicUnitsModel.query.filter(TaxonomicUnitsModel.tsn.in_([self.tsn])).all()
 
-@schema.register
-class Hierarchy(SQLAlchemyNode):
-    class Meta:
-        model = HierarchyModel
-
-    taxonomic_unit = SQLAlchemyConnectionField(TaxonomicUnits)
-    children = SQLAlchemyConnectionField(HierarchyBase)
-
-    def resolve_taxonomic_unit(self, args, info):
-        return TaxonomicUnitsModel.query.filter(TaxonomicUnitsModel.tsn.in_([self.tsn])).all()
-
-    def resolve_children(self, args, info):
+    def resolve_children(self, args, context, info):
         return HierarchyModel.query.filter(HierarchyModel.parent_tsn.in_([self.tsn])).all()
 
-class Viewer(graphene.ObjectType):
+class Query(graphene.ObjectType):
+    node = relay.Node.Field()
+    viewer = graphene.Field(lambda: Query)
+
     all_hierarchy = SQLAlchemyConnectionField(Hierarchy, tsn=graphene.Int())
 
-    def resolve_all_hierarchy(self, args, info):
+    def resolve_all_hierarchy(self, args, context, info):
         tsn = args.get('tsn')
         return HierarchyModel.query.filter(HierarchyModel.tsn == tsn).all()
 
-    all_comments = SQLAlchemyConnectionField(Comment)
+    all_comments = graphene.List(Comment)
     all_kingdoms = SQLAlchemyConnectionField(Kingdom)
     all_experts = SQLAlchemyConnectionField(Expert)
     all_longnames = SQLAlchemyConnectionField(Longname)
@@ -161,15 +149,10 @@ class Viewer(graphene.ObjectType):
     all_vern_ref_links = SQLAlchemyConnectionField(VernRefLinks)
     all_vernaculars = SQLAlchemyConnectionField(Vernaculars)
 
-class Query(graphene.ObjectType):
-    node = relay.NodeField()
-    viewer = graphene.Field(Viewer)
-
     def resolve_viewer(self, *args, **kwargs):
-        return self
+        return Query
 
-schema.query = Query
-
+schema = graphene.Schema(query=Query, types=[Hierarchy, Kingdom])
 introspection_dict = schema.introspect()
 
 with open('data/schema.json', 'w') as fp:
