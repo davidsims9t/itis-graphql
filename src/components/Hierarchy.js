@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, CardTitle, CardText, List, ListItem, Icon } from 'react-mdl'
+import { Card, CardTitle, CardText, Icon } from 'react-mdl'
 
 export default class Hierarchy extends Component {
   componentWillMount() {
@@ -11,7 +11,7 @@ export default class Hierarchy extends Component {
       <List>
         {edge.node.children.edges.map(edge => {
           return (
-            <ListItem style={{display: 'block'}}>
+            <ListItem key={edge.node.id} style={{display: 'block'}}>
               <span>
                 {edge.node.taxonomicUnit.edges[0].node.taxonUnitType.edges[0].node.rankName.trim()}: {edge.node.taxonomicUnit.edges[0].node.completeName}
               </span>
@@ -34,35 +34,34 @@ export default class Hierarchy extends Component {
       <Card style={{width:'100%'}}>
         <CardTitle>List for Kingdom Animalia</CardTitle>
 
-        <CardText style={{padding: 0}}>
-          <List style={{padding: 0}}>
+        <CardText>
+          <table style={{width: '100%'}}>
+            <tr>
+              <th style={{textAlign: 'left'}}>TSN</th>
+              <th style={{textAlign: 'left'}}>Name</th>
+              <th style={{textAlign: 'left'}}>Credibility Rating</th>
+              <th style={{textAlign: 'left'}}>Synonym(s)</th>
+            </tr>
             {this.props.viewer.hierarchies.edges.map(edge => {
               return (
-                <ListItem key={edge.node.id} style={{display: 'block'}}>
-                  <span>
-                    Kingdom: {edge.node.taxonomicUnit.edges[0].node.completeName}
-                    - TSN: {edge.node.tsn}
-                  </span>
-                  <List>
-                    {edge.node.children.edges.map(edge => {
-                      return (
-                        <ListItem style={{display: 'block'}}>
-                          <span>
-                            {edge.node.taxonomicUnit.edges[0].node.taxonUnitType.edges[0].node.rankName.trim()}: {edge.node.taxonomicUnit.edges[0].node.completeName}
-                          </span>
-                          <span>
-                            - TSN: {edge.node.tsn}
-                          </span>
-
-                          {this.getSpecies(edge)}
-                        </ListItem>
-                      )
-                    })}
-                  </List>
-                </ListItem>
+                <tr key={edge.node.id}>
+                  <td>
+                    {edge.node.tsn}
+                  </td>
+                  <td>
+                    {edge.node.taxonomicUnit.edges[0].node.taxonUnitType.edges[0].node.rankName.trim()}:
+                    {edge.node.taxonomicUnit.edges[0].node.completeName}
+                  </td>
+                  <td>
+                    {edge.node.taxonomicUnit.edges[0].node.credibilityRtng}
+                  </td>
+                  <td>
+                    
+                  </td>
+                </tr>
               )
             })}
-          </List>
+          </table>
         </CardText>
       </Card>
     )

@@ -90,7 +90,7 @@ class TaxonomicUnits(SQLAlchemyObjectType):
 
     taxon_unit_type = SQLAlchemyConnectionField(TaxonUnitTypes)
 
-    def resolve_taxon_unit_type(self, args, info):
+    def resolve_taxon_unit_type(self, args, context, info):
         return TaxonUnitTypesModel.query.filter(TaxonUnitTypesModel.rank_id.in_([self.rank_id]), TaxonUnitTypesModel.kingdom_id.in_([self.kingdom_id])).all()
 
 class TuCommentsLinks(SQLAlchemyObjectType):

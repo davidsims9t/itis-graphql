@@ -12,6 +12,7 @@ ReactDOM.render(
   <Router
     render={applyRouterMiddleware(useRelay.default)}
     routes={Routes}
+    forceFetch={true}
     history={browserHistory}
     environment={Relay.Store} />,
   document.getElementById('mount')
