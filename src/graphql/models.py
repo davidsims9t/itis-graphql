@@ -45,6 +45,7 @@ class Kingdom(Base):
     id = Column(Integer, nullable=True)
     kingdom_id = Column(Integer, primary_key=True, nullable=False)
     kingdom_name = Column(String(10), nullable=False)
+    tsn = Column(Integer, nullable=True)
     update_date = Column(Date, nullable=False)
 
 class Longnames(Base):
@@ -112,6 +113,7 @@ class StrippedAuthor(Base):
 class SynonymLinks(Base):
     __tablename__ = 'synonym_links'
     metadata = MetaData(schema='public')
+    id = Column(String(50), nullable=True)
     tsn = Column(Integer, primary_key=True, nullable=False)
     tsn_accepted = Column(Integer, primary_key=True, nullable=False)
     update_date = Column(Date, nullable=False)

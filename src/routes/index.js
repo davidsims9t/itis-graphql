@@ -12,7 +12,7 @@ export default (
       component={KingdomsContainer}
       queries={ViewerQuery} />
     <Route
-      path='/hierarchy/:tsn'
+      path='/hierarchy/:tsn/:level'
       component={HierarchyContainer}
       queries={ViewerQuery} />
   </Route>

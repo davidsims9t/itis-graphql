@@ -68,11 +68,6 @@ class StrippedAuthor(SQLAlchemyObjectType):
         model = StrippedAuthorModel
         interfaces = (relay.Node, )
 
-class SynonymLinks(SQLAlchemyObjectType):
-    class Meta:
-        model = SynonymLinksModel
-        interfaces = (relay.Node, )
-
 class TaxonAuthorsLkp(SQLAlchemyObjectType):
     class Meta:
         model = TaxonAuthorsLkpModel
@@ -92,6 +87,16 @@ class TaxonomicUnits(SQLAlchemyObjectType):
 
     def resolve_taxon_unit_type(self, args, context, info):
         return TaxonUnitTypesModel.query.filter(TaxonUnitTypesModel.rank_id.in_([self.rank_id]), TaxonUnitTypesModel.kingdom_id.in_([self.kingdom_id])).all()
+
+class SynonymLinks(SQLAlchemyObjectType):
+    class Meta:
+        model = SynonymLinksModel
+        interfaces = (relay.Node, )
+
+    taxonomic_unit = SQLAlchemyConnectionField(TaxonomicUnits)
+
+    def resolve_taxonomic_unit(self, args, context, info):
+        return TaxonomicUnitsModel.query.filter(TaxonomicUnitsModel.tsn == self.tsn).all()
 
 class TuCommentsLinks(SQLAlchemyObjectType):
     class Meta:
@@ -114,13 +119,19 @@ class Hierarchy(SQLAlchemyObjectType):
         interfaces = (relay.Node, )
 
     taxonomic_unit = SQLAlchemyConnectionField(TaxonomicUnits)
-    children = SQLAlchemyConnectionField(lambda: Hierarchy)
+    synonym_links = SQLAlchemyConnectionField(SynonymLinks)
+    children = SQLAlchemyConnectionField(lambda: Hierarchy, level=graphene.Int())
+
+    def resolve_synonym_links(self, args, context, info):
+        return SynonymLinksModel.query.filter(SynonymLinksModel.tsn_accepted == self.tsn).all()
 
     def resolve_taxonomic_unit(self, args, context, info):
-        return TaxonomicUnitsModel.query.filter(TaxonomicUnitsModel.tsn.in_([self.tsn])).all()
+        return TaxonomicUnitsModel.query.filter(TaxonomicUnitsModel.tsn == self.tsn).all()
 
     def resolve_children(self, args, context, info):
-        return HierarchyModel.query.filter(HierarchyModel.parent_tsn.in_([self.tsn])).all()
+        return HierarchyModel.query\
+            .filter(HierarchyModel.parent_tsn == self.tsn)\
+            .filter(HierarchyModel.level <= args['level']).all()
 
 class Query(graphene.ObjectType):
     node = relay.Node.Field()
