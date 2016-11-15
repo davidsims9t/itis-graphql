@@ -8,6 +8,10 @@
     <% for (var css in htmlWebpackPlugin.files.css) { %>
       <link href="<%= htmlWebpackPlugin.files.css[css] %>" rel="stylesheet">
     <% } %>
+    <style>
+    .mdl-radio:first-child { margin-left: 0 !important; }
+    .mdl-radio { margin-left: 20px !important; }
+    </style>
     <base href="/" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   </head>

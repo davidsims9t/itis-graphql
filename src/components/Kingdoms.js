@@ -4,19 +4,19 @@ import { browserHistory } from 'react-router'
 
 const levels = [
   {
-    key: 60,
+    key: 6,
     value: 'Class'
   },
   {
-    key: 100,
+    key: 10,
     value: 'Order'
   },
   {
-    key: 140,
+    key: 14,
     value: 'Family'
   },
   {
-    key: 180,
+    key: 22,
     value: 'Genus'
   }
 ]
@@ -26,26 +26,26 @@ export default class Kingdoms extends Component {
     super(props)
 
     this.state = {
-      kingdom: 202423,
-      level: 100
+      tsn: 202423,
+      level: 6
     }
   }
 
   onChangeKingdom = event => {
     this.setState({
-      kingdom: event.target.value
+      tsn: parseInt(event.target.value)
     })
   }
 
   onChangeLevel = event => {
     this.setState({
-      level: event.target.value
+      level: parseInt(event.target.value)
     })
   }
 
   onClick = () => {
-    const tsn = this.state.kingdom
-    browserHistory.push(`/hierarchy/${tsn}`)
+    const { tsn, level } = this.state
+    browserHistory.push(`/hierarchy/${tsn}/${level}`)
   }
 
   render() {
@@ -56,7 +56,7 @@ export default class Kingdoms extends Component {
         <CardText>
           <h3 className="mdl-card__title-text">Select a Kingdom:</h3>
 
-          <RadioGroup name="kingdoms" value={this.state.kingdom} onChange={this.onChangeKingdom}>
+          <RadioGroup name="kingdoms" value={this.state.tsn} onChange={this.onChangeKingdom}>
             {this.props.viewer.kingdoms.edges.map(edge => {
               return (
                 <Radio
@@ -70,7 +70,9 @@ export default class Kingdoms extends Component {
             })}
           </RadioGroup>
 
-          <h3 className="mdl-card__title-text">Run report from kingdom through:</h3>
+          <h3
+            style={{marginTop: '20px'}}
+            className="mdl-card__title-text">Run report from kingdom through:</h3>
 
           <RadioGroup name="level" value={this.state.level} onChange={this.onChangeLevel}>
             {levels.map(level => {
@@ -87,6 +89,7 @@ export default class Kingdoms extends Component {
           </RadioGroup>
 
           <Button
+            style={{marginTop: '20px'}}
             ripple
             raised
             primary

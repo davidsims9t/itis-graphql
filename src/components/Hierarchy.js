@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Card, CardTitle, CardText, Icon } from 'react-mdl'
+import { repeat } from 'lodash'
 
 export default class Hierarchy extends Component {
   componentWillMount() {
@@ -9,22 +10,38 @@ export default class Hierarchy extends Component {
     })
   }
 
-  getSpecies = edge => {
+  getSpecies = (edge, iteration) => {
     return edge.node.children.edges.map(edge => {
+      let row = null
+      if (edge.node.children) {
+        row = this.getSpecies(edge, iteration + 1)
+      }
+
+      const taxonomicUnit = edge.node.taxonomicUnit.edges[0].node
+      const rankName = taxonomicUnit.taxonUnitType.edges[0].node.rankName.trim()
+
       return (
         <tr key={edge.node.id}>
-          <td style={{width: '25%'}}>
-            -- {edge.node.tsn}
-          </td>
-          <td style={{width: '25%'}}>
-            {edge.node.taxonomicUnit.edges[0].node.taxonUnitType.edges[0].node.rankName.trim()}:
-            {edge.node.taxonomicUnit.edges[0].node.completeName}
-          </td>
-          <td style={{width: '25%'}}>
-            {edge.node.taxonomicUnit.edges[0].node.credibilityRtng}
-          </td>
-          <td style={{width: '25%'}}>
+          <td colSpan={4}>
+            <table style={{width: '100%'}}>
+              <tbody>
+                <tr>
+                  <td style={{width: '25%'}}>
+                    {repeat('--', iteration)} {edge.node.tsn}
+                  </td>
+                  <td style={{width: '25%'}}>
+                    {rankName}: {taxonomicUnit.completeName}
+                  </td>
+                  <td style={{width: '25%'}}>
+                    {taxonomicUnit.credibilityRtng}
+                  </td>
+                  <td style={{width: '25%'}}>
 
+                  </td>
+                </tr>
+                {row}
+              </tbody>
+            </table>
           </td>
         </tr>
       )
@@ -52,6 +69,9 @@ export default class Hierarchy extends Component {
             </thead>
             <tbody>
               {this.props.viewer.hierarchies.edges.map(edge => {
+                const taxonomicUnit = edge.node.taxonomicUnit.edges[0].node
+                const rankName = taxonomicUnit.taxonUnitType.edges[0].node.rankName.trim()
+
                 return (
                   <tr key={edge.node.id}>
                     <td colSpan={4}>
@@ -62,17 +82,16 @@ export default class Hierarchy extends Component {
                               {edge.node.tsn}
                             </td>
                             <td style={{width: '25%'}}>
-                              {edge.node.taxonomicUnit.edges[0].node.taxonUnitType.edges[0].node.rankName.trim()}:
-                              {edge.node.taxonomicUnit.edges[0].node.completeName}
+                              {rankName}: {taxonomicUnit.completeName}
                             </td>
                             <td style={{width: '25%'}}>
-                              {edge.node.taxonomicUnit.edges[0].node.credibilityRtng}
+                              {taxonomicUnit.credibilityRtng}
                             </td>
                             <td style={{width: '25%'}}>
 
                             </td>
                           </tr>
-                          {this.getSpecies(edge)}
+                          {this.getSpecies(edge, 1)}
                         </tbody>
                       </table>
                     </td>

@@ -1,7 +1,8 @@
 import Relay from 'react-relay'
 import Hierarchy from './Hierarchy'
+import { repeat } from 'lodash'
 
-const taxonUnitType = Relay.QL`
+const taxonUnitTypeFragment = Relay.QL`
   fragment on TaxonUnitTypesEdge {
     node {
       id
@@ -10,7 +11,7 @@ const taxonUnitType = Relay.QL`
   }
 `
 
-const taxonomicUnit = Relay.QL`
+const taxonomicUnitFragment = Relay.QL`
   fragment on TaxonomicUnitsEdge {
     node {
       id
@@ -19,7 +20,7 @@ const taxonomicUnit = Relay.QL`
 
       taxonUnitType(first:1) {
         edges {
-          ${taxonUnitType}
+          ${taxonUnitTypeFragment}
         }
       }
     }
@@ -36,47 +37,45 @@ const taxonomicUnit = Relay.QL`
 //   }
 // `
 
-const childrenWithoutChildren = Relay.QL`
-  fragment on HierarchyEdge {
-    node {
-      tsn
-      id
+const childrenFragment = (level, iteration) => {
+  if (level === 22 && iteration < 5) {
+    const children = childrenFragment(level, iteration + 1)
 
-      taxonomicUnit(first:1) {
-        edges {
-          ${taxonomicUnit}
+    return Relay.QL`
+      fragment on HierarchyEdge {
+        node {
+          tsn
+          id
+
+          children(first:1000, level:22) {
+            edges {
+              ${children}
+            }
+          }
+
+          taxonomicUnit(first:1) {
+            edges {
+              ${taxonomicUnitFragment}
+            }
+          }
         }
       }
-    }
-  }
-`
-
-const childrenWithChildren = Relay.QL`
-  fragment on HierarchyEdge {
-    node {
-      tsn
-      id
-
-      children(first:1) {
-        edges {
-          ${childrenWithoutChildren}
-        }
-      }
-
-      taxonomicUnit(first:1) {
-        edges {
-          ${taxonomicUnit}
-        }
-      }
-    }
-  }
-`
-
-const nodeFragment = hasChildren => {
-  if (hasChildren) {
-    return childrenWithChildren
+    `
   } else {
-    return childrenWithoutChildren
+    return Relay.QL`
+      fragment on HierarchyEdge {
+        node {
+          tsn
+          id
+
+          taxonomicUnit(first:1) {
+            edges {
+              ${taxonomicUnitFragment}
+            }
+          }
+        }
+      }
+    `
   }
 }
 
@@ -87,15 +86,13 @@ export default Relay.createContainer(Hierarchy, {
   },
 
   fragments: {
-    viewer: () => {
-      return Relay.QL`
-        fragment on Query {
-          hierarchies: allHierarchy(first:100, tsn:$tsn, level:$level) {
-            edges {
-              ${nodeFragment(true)}
-            }
+    viewer: () => Relay.QL`
+      fragment on Query {
+        hierarchies: allHierarchy(first:100, tsn:$tsn) {
+          edges {
+            ${childrenFragment(22, 0)}
           }
-        }`
-      }
+        }
+      }`
   }
 })
