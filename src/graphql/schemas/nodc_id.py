@@ -1,8 +1,8 @@
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
-from models.comment import Comment as CommentModel
+from models.nodc_id import NodcId as NodcIdModel
 
-class Comment(SQLAlchemyObjectType):
+class NodcId(SQLAlchemyObjectType):
     class Meta:
-        model = CommentModel
+        model = NodcIdModel
         interfaces = (relay.Node, )

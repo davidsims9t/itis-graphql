@@ -1,8 +1,8 @@
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
-from models.comment import Comment as CommentModel
+from models.kingdom import Kingdom as KingdomModel
 
-class Comment(SQLAlchemyObjectType):
+class Kingdom(SQLAlchemyObjectType):
     class Meta:
-        model = CommentModel
+        model = KingdomModel
         interfaces = (relay.Node, )

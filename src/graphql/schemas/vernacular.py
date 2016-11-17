@@ -1,8 +1,8 @@
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyObjectType
-from models.comment import Comment as CommentModel
+from models.vernacular import Vernacular as VernacularModel
 
-class Comment(SQLAlchemyObjectType):
+class Vernacular(SQLAlchemyObjectType):
     class Meta:
-        model = CommentModel
+        model = VernacularModel
         interfaces = (relay.Node, )

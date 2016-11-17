@@ -4,11 +4,9 @@ from sqlalchemy.ext.declarative import declarative_base
 
 from database import Base
 
-class Comment(Base):
-    __tablename__ = 'comments'
+class TuCommentLink(Base):
+    __tablename__ = 'tu_comments_links'
     metadata = MetaData(schema='public')
+    tsn = Column(Integer, primary_key=True, nullable=False)
     comment_id = Column(Integer, primary_key=True, nullable=False)
-    commentator = Column(String(100), nullable=True)
-    comment_detail = Column(String, nullable=False)
-    comment_time_stamp = Column(DateTime, nullable=False)
     update_date = Column(Date, nullable=False)

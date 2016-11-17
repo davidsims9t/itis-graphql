@@ -12,6 +12,5 @@ Base = declarative_base()
 Base.query = db_session.query_property()
 
 def init_db():
-    from models import Kingdom
     Base.metadata.create_all(bind=engine)
     db_session.commit()
